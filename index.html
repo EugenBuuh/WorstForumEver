@@ -1,0 +1,70 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>OpenInsecureForum</title>
+</head>
+<body>
+  <h2>Register</h2>
+  <input id="r_user" placeholder="username">
+  <input id="r_pass" placeholder="password">
+  <button onclick="register()">Register</button>
+
+  <h2>Login</h2>
+  <input id="l_user" placeholder="username">
+  <input id="l_pass" placeholder="password">
+  <button onclick="login()">Login</button>
+
+  <h2>New Post</h2>
+  <input id="post">
+  <button onclick="post()">Post</button>
+
+  <h2>Posts</h2>
+  <div id="posts"></div>
+
+<script>
+function register() {
+  fetch('/register', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      username: r_user.value,
+      password: r_pass.value
+    })
+  });
+}
+
+function login() {
+  fetch('/login', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      username: l_user.value,
+      password: l_pass.value
+    })
+  });
+}
+
+function post() {
+  const content = document.querySelector("#post");
+
+  fetch('/post', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      content: content.value
+    })
+  });
+}
+
+fetch('/posts')
+  .then(r => r.json())
+  .then(data => {
+    posts.innerHTML = data.map(p =>
+      `<p><b>${p.username}</b>: ${p.content}</p>`
+    ).join('');
+  });
+</script>
+</body>
+</html>
